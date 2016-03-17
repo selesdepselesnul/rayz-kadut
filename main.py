@@ -31,9 +31,8 @@ class SnakeSprite(pygame.sprite.Sprite):
 def main():
 	pygame.init()
 
-
 	running = True
-	resolution = (600, 400)
+	resolution = (MainController.RESOLUTION[0], MainController.RESOLUTION[1])
 	pygame.display.set_caption('Rayz Kadut')
 	
 	main_surface = pygame.display.set_mode(resolution)
