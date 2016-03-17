@@ -1,5 +1,9 @@
 import pygame
 
+class MainController:
+	RESOLUTION = (600, 400)
+
+
 class Color:
 
 	BLACK = (0, 0, 0)
@@ -7,16 +11,18 @@ class Color:
 
 class SnakeSprite(pygame.sprite.Sprite):
 
-	"""docstring for SnakeSprite"""
+	WIDTH = 20
+	HEIGHT = 60
+
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
 		self.image = pygame.image.load('snake.png')
 		self.rect = self.image.get_rect()
 		
 	def update(self, source):
-		source.blit(self.image, (20, 20))
-
-
+		source.blit(self.image, 
+			(MainController.RESOLUTION[0]/2 - SnakeSprite.WIDTH,
+			 MainController.RESOLUTION[1] - SnakeSprite.HEIGHT))
 
 def main():
 	pygame.init()
