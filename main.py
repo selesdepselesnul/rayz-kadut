@@ -16,13 +16,20 @@ class GradeSprite(pygame.sprite.Sprite):
 		pygame.sprite.Sprite.__init__(self)
 		self.image = pygame.image.load(image_url)
 		self.rect = self.image.get_rect()
-		self.rect.x = random.randint(0, MainController.RESOLUTION[0])
-		self.rect.y = -15
+		self._gen_rand_coord()
 		self.val = val
 
+	def _gen_rand_coord(self):
+		self.rect.x = random.randint(0, MainController.RESOLUTION[0] - 30)
+		self.rect.y = random.randint(-100, -15)
+
 	def update(self, surface, y):
-		self.rect.y += y	
+		if self.rect.y  > MainController.RESOLUTION[1]:
+			self._gen_rand_coord()
+		else:
+			self.rect.y += y	
 		surface.blit(self.image, (self.rect.x, self.rect.y))
+
 
 
 class SnakeSprite(pygame.sprite.Sprite):
@@ -60,9 +67,11 @@ def main():
 		GradeSprite('image/grade_c.png', 'c'),
 		GradeSprite('image/grade_d.png', 'd'),
 		GradeSprite('image/grade_e.png', 'e'))
+	
 
 	
 	while True:
+
 		for event in pygame.event.get():
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_ESCAPE:
