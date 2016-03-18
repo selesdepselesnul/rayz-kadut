@@ -1,7 +1,7 @@
 import pygame
 
 class MainController:
-	RESOLUTION = (600, 400)
+	RESOLUTION = (600, 540)
 
 
 class Color:
@@ -47,8 +47,10 @@ def main():
 					quit()
 				if event.key == pygame.K_RIGHT:
 					move = 5
+				if event.key == pygame.K_LEFT:
+					move = -5
 			if event.type == pygame.KEYUP:
-				if event.key == pygame.K_RIGHT:
+				if event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
 					move = 0 	
 
 		clock.tick(30)
