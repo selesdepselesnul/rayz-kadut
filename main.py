@@ -1,4 +1,5 @@
 import pygame
+import random
 
 class MainController:
 	RESOLUTION = (600, 540)
@@ -13,11 +14,12 @@ class GradeSprite(pygame.sprite.Sprite):
 
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
-		self.image = pygame.image.load('snake.png')
+		self.image = pygame.image.load('image/grade_a.png')
 		self.rect = self.image.get_rect()
-		self.surface = surface
-		self.rect.x = MainController.RESOLUTION[0]/2 - SnakeSprite.WIDTH
-		self.rect.y = MainController.RESOLUTION[1] - SnakeSprite.HEIGHT
+		self.rect.x = random.randint(0, SnakeSprite.WIDTH)
+		self.rect.y = random.randint(0, SnakeSprite.HEIGHT)
+
+
 class SnakeSprite(pygame.sprite.Sprite):
 
 	WIDTH = 30
@@ -47,6 +49,8 @@ def main():
 	
 	main_surface = pygame.display.set_mode(resolution)
 	snake_sprite = SnakeSprite(main_surface)
+	grades_sprite_group = pygame.sprite.Group(GradeSprite())
+
 	
 	while True:
 		for event in pygame.event.get():
@@ -65,6 +69,7 @@ def main():
 		clock.tick(30)
 		snake_sprite.update(
 			(snake_sprite.rect.x + move, snake_sprite.rect.y))
+		grades_sprite_group.draw(main_surface)
 		pygame.display.update()			
 		
 if __name__ == '__main__':
