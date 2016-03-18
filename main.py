@@ -31,7 +31,7 @@ class SnakeSprite(pygame.sprite.Sprite):
 def main():
 	pygame.init()
 
-	running = True
+	clock = pygame.time.Clock()
 	resolution = (MainController.RESOLUTION[0], MainController.RESOLUTION[1])
 	pygame.display.set_caption('Rayz Kadut')
 	
@@ -40,15 +40,15 @@ def main():
 	snake_sprite = SnakeSprite(main_surface)
 	snake_sprite.update()
 	
-	while running:
+	while True:
 		for event in pygame.event.get():
 			if event.dict.get('key') == pygame.K_q:
-				running = False
 				pygame.quit()
 				quit()
 
 			# if event.dict.get('key') == pygame.K_RIGHT:
 			# 	snake_sprite.update()
+		clock.tick(30)
 		pygame.display.update()			
 		
 if __name__ == '__main__':
