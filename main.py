@@ -9,14 +9,23 @@ class Color:
 	BLACK = (0, 0, 0)
 	WHITE = (255, 255, 255)
 
+class GradeSprite(pygame.sprite.Sprite):
+
+	def __init__(self):
+		pygame.sprite.Sprite.__init__(self)
+		self.image = pygame.image.load('snake.png')
+		self.rect = self.image.get_rect()
+		self.surface = surface
+		self.rect.x = MainController.RESOLUTION[0]/2 - SnakeSprite.WIDTH
+		self.rect.y = MainController.RESOLUTION[1] - SnakeSprite.HEIGHT
 class SnakeSprite(pygame.sprite.Sprite):
 
-	WIDTH = 20
+	WIDTH = 30
 	HEIGHT = 60
 
 	def __init__(self, surface):
 		pygame.sprite.Sprite.__init__(self)
-		self.image = pygame.image.load('snake.png')
+		self.image = pygame.image.load('image/snake.png')
 		self.rect = self.image.get_rect()
 		self.surface = surface
 		self.rect.x = MainController.RESOLUTION[0]/2 - SnakeSprite.WIDTH
