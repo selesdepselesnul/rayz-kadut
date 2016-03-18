@@ -1,5 +1,6 @@
 import pygame
 import random
+from string import Template
 
 class MainController:
 	RESOLUTION = (600, 540)
@@ -40,11 +41,26 @@ class StudentSprite(pygame.sprite.Sprite):
 		self.rect.x = coordinat[0]
 		self.rect.y = coordinat[1]
 
-	def update(self):
+	def update(self, grades_sprite_group):
 		self.rect.y -= 5
 		self.surface.blit(self.image, (self.rect.x, self.rect.y))
+		coll_grade_group = pygame.sprite.spritecollide(
+			self, grades_sprite_group, True)
+		for coll_grade in coll_grade_group:
+			grades_sprite_group.add(self._make_grade(coll_grade.val))
 
-
+	def _make_grade(self, val):
+		template = 'image/grade_{}.png'
+		if val == 'a':
+			return GradeSprite(template.format('a'), 'a')
+		elif val == 'b':
+			return GradeSprite(template.format('b'), 'b')
+		elif val == 'c':
+			return GradeSprite(template.format('c'), 'c')
+		elif val == 'd':
+			return GradeSprite(template.format('d'), 'd')
+		else:
+			return GradeSprite(template.format('e'), 'e')
 
 class SnakeSprite(pygame.sprite.Sprite):
 
@@ -104,13 +120,14 @@ def main():
 			if event.type == pygame.KEYUP:
 				if event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
 					move = 0 	
-			
+		
+
 		clock.tick(30)
 		main_surface.fill(Color.WHITE)
 		snake_sprite.update(
 			(snake_sprite.rect.x + move, snake_sprite.rect.y))
 		grades_sprite_group.update(main_surface, 5)
-		student_group_sprite.update()
+		student_group_sprite.update(grades_sprite_group)
 		pygame.display.update()			
 		
 if __name__ == '__main__':
