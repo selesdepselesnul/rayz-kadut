@@ -16,8 +16,8 @@ class GradeSprite(pygame.sprite.Sprite):
 		pygame.sprite.Sprite.__init__(self)
 		self.image = pygame.image.load('image/grade_a.png')
 		self.rect = self.image.get_rect()
-		self.rect.x = random.randint(0, SnakeSprite.WIDTH)
-		self.rect.y = random.randint(0, SnakeSprite.HEIGHT)
+		self.rect.x = random.randint(0, MainController.RESOLUTION[0])
+		self.rect.y = random.randint(0, MainController.RESOLUTION[1])
 
 
 class SnakeSprite(pygame.sprite.Sprite):
