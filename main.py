@@ -30,6 +30,20 @@ class GradeSprite(pygame.sprite.Sprite):
 			self.rect.y += y	
 		surface.blit(self.image, (self.rect.x, self.rect.y))
 
+class StudentSprite(pygame.sprite.Sprite):
+	
+	def __init__(self, surface, coordinat):
+		pygame.sprite.Sprite.__init__(self)
+		self.image = pygame.image.load('image/student.png')
+		self.rect = self.image.get_rect()
+		self.surface = surface
+		self.rect.x = coordinat[0]
+		self.rect.y = coordinat[1]
+
+	def update(self):
+		self.rect.y -= 5
+		self.surface.blit(self.image, (self.rect.x, self.rect.y))
+
 
 
 class SnakeSprite(pygame.sprite.Sprite):
@@ -68,7 +82,7 @@ def main():
 		GradeSprite('image/grade_d.png', 'd'),
 		GradeSprite('image/grade_e.png', 'e'))
 	
-
+	student_group_sprite = pygame.sprite.Group()
 	
 	while True:
 
@@ -81,15 +95,22 @@ def main():
 					move = 5
 				if event.key == pygame.K_LEFT:
 					move = -5
+				if event.key == pygame.K_SPACE:
+					student_group_sprite.add(
+						StudentSprite(main_surface, 
+							(snake_sprite.rect.x, snake_sprite.rect.y - 60)))
+
+
 			if event.type == pygame.KEYUP:
 				if event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
 					move = 0 	
-
+			
 		clock.tick(30)
 		main_surface.fill(Color.WHITE)
 		snake_sprite.update(
 			(snake_sprite.rect.x + move, snake_sprite.rect.y))
 		grades_sprite_group.update(main_surface, 5)
+		student_group_sprite.update()
 		pygame.display.update()			
 		
 if __name__ == '__main__':
