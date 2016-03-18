@@ -19,38 +19,41 @@ class SnakeSprite(pygame.sprite.Sprite):
 		self.image = pygame.image.load('snake.png')
 		self.rect = self.image.get_rect()
 		self.surface = surface
-		self.DEFAULT_X = MainController.RESOLUTION[0]/2 - SnakeSprite.WIDTH
-		self.DEFAULT_Y = MainController.RESOLUTION[1] - SnakeSprite.HEIGHT
+		self.rect.x = MainController.RESOLUTION[0]/2 - SnakeSprite.WIDTH
+		self.rect.y = MainController.RESOLUTION[1] - SnakeSprite.HEIGHT
 		
-	def update(self, coordinat = None):
-		if coordinat:
-			self.surface.blit(self.image, (coordinat[0], coordinat[1]))
-		else:	
-			self.surface.blit(self.image, 
-				(self.DEFAULT_X,self.DEFAULT_Y))
-
+	def update(self, coordinat):
+		self.surface.fill(Color.WHITE)
+		self.rect.x = coordinat[0]
+		self.rect.y = coordinat[1]	
+		self.surface.blit(self.image, (coordinat[0], coordinat[1]))
+		
 def main():
 	pygame.init()
 
-	x_move = 0
+	move = 0
 	clock = pygame.time.Clock()
 	resolution = (MainController.RESOLUTION[0], MainController.RESOLUTION[1])
 	pygame.display.set_caption('Rayz Kadut')
 	
 	main_surface = pygame.display.set_mode(resolution)
-	main_surface.fill(Color.WHITE)
 	snake_sprite = SnakeSprite(main_surface)
-	snake_sprite.update()
-	x = 0
+	
 	while True:
 		for event in pygame.event.get():
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_ESCAPE:
 					pygame.quit()
 					quit()
-
+				if event.key == pygame.K_RIGHT:
+					move = 5
+			if event.type == pygame.KEYUP:
+				if event.key == pygame.K_RIGHT:
+					move = 0 	
 
 		clock.tick(30)
+		snake_sprite.update(
+			(snake_sprite.rect.x + move, snake_sprite.rect.y))
 		pygame.display.update()			
 		
 if __name__ == '__main__':
