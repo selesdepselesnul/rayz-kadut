@@ -19,6 +19,7 @@ class GradeSprite(pygame.sprite.Sprite):
 		self.rect = self.image.get_rect()
 		self._gen_rand_coord()
 		self.val = val
+		self.image_url = image_url
 
 	def _gen_rand_coord(self):
 		self.rect.x = random.randint(0, MainController.RESOLUTION[0] - 30)
@@ -47,20 +48,8 @@ class StudentSprite(pygame.sprite.Sprite):
 		coll_grade_group = pygame.sprite.spritecollide(
 			self, grades_sprite_group, True)
 		for coll_grade in coll_grade_group:
-			grades_sprite_group.add(self._make_grade(coll_grade.val))
+			grades_sprite_group.add(GradeSprite(coll_grade.image_url, coll_grade.val))
 
-	def _make_grade(self, val):
-		template = 'image/grade_{}.png'
-		if val == 'a':
-			return GradeSprite(template.format('a'), 'a')
-		elif val == 'b':
-			return GradeSprite(template.format('b'), 'b')
-		elif val == 'c':
-			return GradeSprite(template.format('c'), 'c')
-		elif val == 'd':
-			return GradeSprite(template.format('d'), 'd')
-		else:
-			return GradeSprite(template.format('e'), 'e')
 
 class SnakeSprite(pygame.sprite.Sprite):
 
@@ -75,10 +64,14 @@ class SnakeSprite(pygame.sprite.Sprite):
 		self.rect.x = MainController.RESOLUTION[0]/2 - SnakeSprite.WIDTH
 		self.rect.y = MainController.RESOLUTION[1] - SnakeSprite.HEIGHT
 		
-	def update(self, coordinat):
+	def update(self, coordinat, grades_sprite_group):
 		self.rect.x = coordinat[0]
 		self.rect.y = coordinat[1]	
 		self.surface.blit(self.image, (coordinat[0], coordinat[1]))
+		coll_grade_group = pygame.sprite.spritecollide(
+			self, grades_sprite_group, True)
+		for coll_grade in coll_grade_group:
+			grades_sprite_group.add(GradeSprite(coll_grade.image_url, coll_grade.val))
 		
 def main():
 	pygame.init()
@@ -125,7 +118,7 @@ def main():
 		clock.tick(30)
 		main_surface.fill(Color.WHITE)
 		snake_sprite.update(
-			(snake_sprite.rect.x + move, snake_sprite.rect.y))
+			(snake_sprite.rect.x + move, snake_sprite.rect.y), grades_sprite_group)
 		grades_sprite_group.update(main_surface, 5)
 		student_group_sprite.update(grades_sprite_group)
 		pygame.display.update()			
