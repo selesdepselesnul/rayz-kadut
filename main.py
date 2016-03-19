@@ -42,19 +42,33 @@ class StudentSprite(pygame.sprite.Sprite):
 		self.rect.x = coordinat[0]
 		self.rect.y = coordinat[1]
 
-	def update(self, grades_sprite_group):
+	def update(self, grades_sprite_group, snake_sprite):
 		self.rect.y -= 5
 		self.surface.blit(self.image, (self.rect.x, self.rect.y))
 		coll_grade_group = pygame.sprite.spritecollide(
 			self, grades_sprite_group, True)
 		for coll_grade in coll_grade_group:
-			grades_sprite_group.add(GradeSprite(coll_grade.image_url, coll_grade.val))
+			if coll_grade.val == 'a':
+				snake_sprite.current_score -= 100
+			elif coll_grade.val == 'b':
+				snake_sprite.current_score -= 10
+			elif coll_grade.val == 'c':
+				snake_sprite.current_score += 10
+			elif coll_grade.val == 'd':
+				snake_sprite.current_score += 50
+			else:
+				snake_sprite.current_score += 100
+
+			grades_sprite_group.add(GradeSprite(
+				coll_grade.image_url, coll_grade.val))
 
 
 class SnakeSprite(pygame.sprite.Sprite):
 
 	WIDTH = 30
 	HEIGHT = 60
+	current_score = 0
+	health = 100
 
 	def __init__(self, surface):
 		pygame.sprite.Sprite.__init__(self)
@@ -71,10 +85,27 @@ class SnakeSprite(pygame.sprite.Sprite):
 		coll_grade_group = pygame.sprite.spritecollide(
 			self, grades_sprite_group, True)
 		for coll_grade in coll_grade_group:
+			if coll_grade.val == 'a':
+				self.current_score += 1000
+			elif coll_grade.val == 'b':
+				self.current_score += 100
+			elif coll_grade.val == 'c':
+				self.health -= 5
+			elif coll_grade.val == 'd':
+				self.health -= 10
+			else:
+				self.health -= 100	
 			grades_sprite_group.add(GradeSprite(coll_grade.image_url, coll_grade.val))
 		
+def make_font_surface(content, size, color):
+	return pygame.font.Font(
+		pygame.font.get_default_font(), size).render(
+			content, True, color)
+
+
 def main():
 	pygame.init()
+	speed = 5
 
 	move = 0
 	clock = pygame.time.Clock()
@@ -92,7 +123,7 @@ def main():
 		GradeSprite('image/grade_e.png', 'e'))
 	
 	student_group_sprite = pygame.sprite.Group()
-	
+	game_over_surface = make_font_surface('GAME OVER !', 40, (255, 0, 0))
 	while True:
 
 		for event in pygame.event.get():
@@ -117,10 +148,23 @@ def main():
 
 		clock.tick(30)
 		main_surface.fill(Color.WHITE)
+		score_surface = pygame.font.Font(
+			pygame.font.get_default_font(), 20).render(
+			'Raynizm : ' + str(snake_sprite.current_score), True, (0, 0, 0))
+		health_surface = pygame.font.Font(
+			pygame.font.get_default_font(), 20).render(
+			'Health     : ' + str(snake_sprite.health), True, (0, 0, 0))
+		main_surface.blit(score_surface, (0, 0))
+		main_surface.blit(health_surface, (0, 30))
 		snake_sprite.update(
 			(snake_sprite.rect.x + move, snake_sprite.rect.y), grades_sprite_group)
-		grades_sprite_group.update(main_surface, 5)
-		student_group_sprite.update(grades_sprite_group)
+		grades_sprite_group.update(main_surface, speed)
+		speed += 0.001
+		student_group_sprite.update(grades_sprite_group, snake_sprite)
+		if snake_sprite.health <= 0:
+			main_surface.fill(Color.BLACK)
+			main_surface.blit(game_over_surface, 
+				(MainController.RESOLUTION[0]/4, MainController.RESOLUTION[1]/2))
 		pygame.display.update()			
 		
 if __name__ == '__main__':
