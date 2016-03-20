@@ -2,6 +2,9 @@ import pygame
 import random
 import sqlite3
 import os.path
+import curses
+import sys
+import os
 '''
 author : Moch Deden
 github : https://github.com/selesdepselesnul
@@ -109,17 +112,28 @@ def make_font_surface(content, size, color):
         pygame.font.get_default_font(), size).render(
             content, True, color)
 
+def _clear():
+    if sys.platform.startswith('linux'):
+        os.system('clear')
+    else:
+        os.system('cls')
 
 def main():
+
 
     if not os.path.exists('cucok.db'):
         conn = sqlite3.connect('cucok.db')
         cursor = conn.cursor()        
         cursor.execute('CREATE TABLE Player ( name TEXT, score BIGINT)')
     else:
+        _clear()
         conn = sqlite3.connect('cucok.db')
         cursor = conn.cursor()
-    player_name = input('what is your name ? ')
+        print('Current Top 10\n\n')
+        for player in cursor.execute('SELECT * FROM Player ORDER BY score DESC LIMIT 10'):
+            print(player)
+        print('\nWanna be next ?')  
+    player_name = input('\nwhat is your name ? ')
     pygame.init()
     speed = 5
 
@@ -148,6 +162,7 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
+                    _clear()
                     print('Good bye {}!'.format(player_name))
                     quit()
                 if event.key == pygame.K_RIGHT:
@@ -194,10 +209,11 @@ def main():
             main_surface.blit(game_over_surface, 
                     (0, 0))
             final_raynizm = make_font_surface(
-                    'All Hail to {} your total Raynizm is '.format(player_name) + str(snake_sprite.current_score), 
-                    20, (0, 0, 0))
+                    "All Hail to {} your total Raynizm is {}".
+                    format(player_name, str(snake_sprite.current_score)) , 
+                    18, (0, 0, 0))
             main_surface.blit(final_raynizm, 
-                    (0, 0))
+                    (6, 20))
             if is_alive:
                 cursor.execute('INSERT INTO Player VALUES (?, ?)', (player_name, snake_sprite.current_score))
                 conn.commit()
