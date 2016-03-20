@@ -133,6 +133,8 @@ def main():
             print(player)
         print('\nWanna be next ?')  
     player_name = input('\nwhat is your name ? ')
+    _clear()
+    print('GAME IS ON !!!')
     pygame.init()
     speed = 5
 
