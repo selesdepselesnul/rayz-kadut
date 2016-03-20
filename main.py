@@ -119,10 +119,7 @@ def main():
     else:
         conn = sqlite3.connect('cucok.db')
         cursor = conn.cursor()
-    print('Hello Buddy, i will guide you to this mother fucking game, are you ready ?')
-    player_name = input('btw what is your name ? ')
-    print('Hey {} glad to see you, press enter to kick in'.format(player_name))
-    input()
+    player_name = input('what is your name ? ')
     pygame.init()
     speed = 5
 
@@ -151,7 +148,7 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
-                    print('Good bye!')
+                    print('Good bye {}!'.format(player_name))
                     quit()
                 if event.key == pygame.K_RIGHT:
                     move = 5
