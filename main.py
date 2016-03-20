@@ -2,7 +2,6 @@ import pygame
 import random
 import sqlite3
 import os.path
-import curses
 import sys
 import os
 '''
