@@ -132,7 +132,7 @@ def main():
     student_group_sprite = pygame.sprite.Group()
     game_over_surface = pygame.image.load('image/game_over.jpg')
     while True:
-
+        clock.tick(30)
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -149,13 +149,17 @@ def main():
                 if event.key == pygame.K_r:
                     main()
 
-            print(speed)        
+            # print(speed)        
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
                     move = 0    
         
 
-        clock.tick(30)
+        print('current x {}'.format(snake_sprite.rect.x))            
+        if snake_sprite.rect.x >= MainController.RESOLUTION[0] - snake_sprite.WIDTH + 2:
+            snake_sprite.rect.x = snake_sprite.rect.x - 6
+        elif snake_sprite.rect.x <=  2:
+            snake_sprite.rect.x = 3
         main_surface.fill(Color.WHITE)
         score_surface = pygame.font.Font(
             pygame.font.get_default_font(), 20).render(
@@ -172,7 +176,6 @@ def main():
         speed += 0.004
         student_group_sprite.update(grades_sprite_group, snake_sprite)
         if snake_sprite.health <= 0:
-            main_surface.fill(Color.BLACK)
             main_surface.blit(game_over_surface, 
                 (0, 0))
         pygame.display.update()         
