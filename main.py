@@ -55,6 +55,7 @@ class StudentSprite(pygame.sprite.Sprite):
         for coll_grade in coll_grade_group:
             if coll_grade.val == 'a':
                 snake_sprite.current_score -= 100
+                snake_sprite.health -= 4
             elif coll_grade.val == 'b':
                 snake_sprite.current_score -= 10
             elif coll_grade.val == 'c':
@@ -127,6 +128,7 @@ def main():
         GradeSprite('image/grade_d.png', 'd'),
         GradeSprite('image/grade_e.png', 'e'))
     
+
     student_group_sprite = pygame.sprite.Group()
     game_over_surface = pygame.image.load('image/game_over.jpg')
     while True:
@@ -147,7 +149,7 @@ def main():
                 if event.key == pygame.K_r:
                     main()
 
-
+            print(speed)        
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
                     move = 0    
@@ -161,12 +163,13 @@ def main():
         health_surface = pygame.font.Font(
             pygame.font.get_default_font(), 20).render(
             'Health     : ' + str(snake_sprite.health), True, (0, 0, 0))
+        snake_sprite.current_score += int(0.1 * speed)
         main_surface.blit(score_surface, (0, 0))
         main_surface.blit(health_surface, (0, 30))
         snake_sprite.update(
             (snake_sprite.rect.x + move, snake_sprite.rect.y), grades_sprite_group)
         grades_sprite_group.update(main_surface, speed)
-        speed += 0.001
+        speed += 0.004
         student_group_sprite.update(grades_sprite_group, snake_sprite)
         if snake_sprite.health <= 0:
             main_surface.fill(Color.BLACK)
