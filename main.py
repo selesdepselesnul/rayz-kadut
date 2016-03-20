@@ -1,6 +1,11 @@
 import pygame
 import random
 from string import Template
+'''
+author : Moch Deden
+github : https://github.com/selesdepselesnul
+site   : http://selesdepselesnul.com
+'''
 
 class MainController:
 	RESOLUTION = (600, 540)
