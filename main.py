@@ -1,6 +1,7 @@
 import pygame
 import random
-from PyQt5.QtWidgets import QInputDialog, QLineEdit
+import sqlite3
+import os.path
 '''
 author : Moch Deden
 github : https://github.com/selesdepselesnul
@@ -8,7 +9,7 @@ site   : http://selesdepselesnul.com
 '''
 
 class MainController:
-    RESOLUTION = (700, 419)
+    RESOLUTION = (700, 521)
 
 
 class Color:
@@ -110,6 +111,18 @@ def make_font_surface(content, size, color):
 
 
 def main():
+
+    if not os.path.exists('cucok.db'):
+        conn = sqlite3.connect('cucok.db')
+        cursor = conn.cursor()        
+        cursor.execute('CREATE TABLE Player ( name TEXT, score BIGINT)')
+    else:
+        conn = sqlite3.connect('cucok.db')
+        cursor = conn.cursor()
+    print('Hello Buddy, i will guide you to this mother fucking game, are you ready ?')
+    player_name = input('btw what is your name ? ')
+    print('Hey {} glad to see you, press enter to kick in'.format(player_name))
+    input()
     pygame.init()
     speed = 5
 
@@ -131,6 +144,7 @@ def main():
 
     student_group_sprite = pygame.sprite.Group()
     game_over_surface = pygame.image.load('image/game_over.jpg')
+    is_alive = True
     while True:
         clock.tick(30)
         for event in pygame.event.get():
@@ -149,7 +163,7 @@ def main():
                 if event.key == pygame.K_r:
                     main()
 
-            # print(speed)        
+          
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
                     move = 0    
@@ -160,25 +174,43 @@ def main():
             snake_sprite.rect.x = snake_sprite.rect.x - 6
         elif snake_sprite.rect.x <=  2:
             snake_sprite.rect.x = 3
-        main_surface.fill(Color.WHITE)
-        score_surface = pygame.font.Font(
-            pygame.font.get_default_font(), 20).render(
-            'Raynizm : ' + str(snake_sprite.current_score), True, (0, 0, 0))
-        health_surface = pygame.font.Font(
-            pygame.font.get_default_font(), 20).render(
-            'Health     : ' + str(snake_sprite.health), True, (0, 0, 0))
-        snake_sprite.current_score += int(0.1 * speed)
-        main_surface.blit(score_surface, (0, 0))
-        main_surface.blit(health_surface, (0, 30))
-        snake_sprite.update(
-            (snake_sprite.rect.x + move, snake_sprite.rect.y), grades_sprite_group)
-        grades_sprite_group.update(main_surface, speed)
-        speed += 0.004
-        student_group_sprite.update(grades_sprite_group, snake_sprite)
+        if is_alive:
+            main_surface.fill(Color.WHITE)
+            score_surface = pygame.font.Font(
+                pygame.font.get_default_font(), 20).render(
+                'Raynizm : ' + str(snake_sprite.current_score), True, (0, 0, 0))
+            health_surface = pygame.font.Font(
+                pygame.font.get_default_font(), 20).render(
+                'Health     : ' + str(snake_sprite.health), True, (0, 0, 0))
+        
+            snake_sprite.current_score += int(0.1 * speed)
+            main_surface.blit(score_surface, (0, 0))
+            main_surface.blit(health_surface, (0, 30))
+            snake_sprite.update(
+                (snake_sprite.rect.x + move, snake_sprite.rect.y), grades_sprite_group)
+            grades_sprite_group.update(main_surface, speed)
+            speed += 0.004
+
+            student_group_sprite.update(grades_sprite_group, snake_sprite)
         if snake_sprite.health <= 0:
+           
             main_surface.blit(game_over_surface, 
-                (0, 0))
+                    (0, 0))
+            final_raynizm = make_font_surface(
+                    'All Hail to {} your total Raynizm is '.format(player_name) + str(snake_sprite.current_score), 
+                    34, (255, 134, 4))
+            main_surface.blit(final_raynizm, 
+                    (0, 0))
+            if is_alive:
+                cursor.execute('INSERT INTO Player VALUES (?, ?)', (player_name, snake_sprite.current_score))
+                conn.commit()
+                conn.close()
+                is_alive = False             
+        
         pygame.display.update()         
         
+
+
+          
 if __name__ == '__main__':
     main()
