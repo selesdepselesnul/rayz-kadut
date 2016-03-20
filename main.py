@@ -9,7 +9,7 @@ site   : http://selesdepselesnul.com
 '''
 
 class MainController:
-    RESOLUTION = (700, 521)
+    RESOLUTION = (640, 417)
 
 
 class Color:
@@ -151,6 +151,7 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
+                    print('Good bye!')
                     quit()
                 if event.key == pygame.K_RIGHT:
                     move = 5
@@ -168,8 +169,7 @@ def main():
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
                     move = 0    
         
-
-        print('current x {}'.format(snake_sprite.rect.x))            
+   
         if snake_sprite.rect.x >= MainController.RESOLUTION[0] - snake_sprite.WIDTH + 2:
             snake_sprite.rect.x = snake_sprite.rect.x - 6
         elif snake_sprite.rect.x <=  2:
@@ -198,7 +198,7 @@ def main():
                     (0, 0))
             final_raynizm = make_font_surface(
                     'All Hail to {} your total Raynizm is '.format(player_name) + str(snake_sprite.current_score), 
-                    34, (255, 134, 4))
+                    20, (0, 0, 0))
             main_surface.blit(final_raynizm, 
                     (0, 0))
             if is_alive:
